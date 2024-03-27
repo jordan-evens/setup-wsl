@@ -71,6 +71,8 @@ Setup-Automount alpine_docker
 
 # might need to restart host after first attempt for wsl --install to work
 # will prompt for default user but we don't need to know what gets entered
+echo "Installing $WSL_DISTRO will prompt for a default user name and end at a prompt"
+echo "When you get to the prompt, just type `exit` to leave it and continue the installation"
 wsl --install -d $WSL_DISTRO --web-download
 wsl --set-default $WSL_DISTRO
 Push-Location $DIR_SCRIPTS
