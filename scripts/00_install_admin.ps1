@@ -4,5 +4,3 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 # Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-# complaining about kernel being out of date
-msiexec /passive /i wsl_update_x64.msi

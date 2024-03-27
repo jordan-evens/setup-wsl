@@ -53,11 +53,6 @@ function Setup-Automount {
     return "$Path"
 }
 
-
-
-# download files that admin script needs
-$WSL_MSI = Ensure-Download https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi "wsl_update_x64.msi"
-
 # run as admin
 echo "Installing requirements for WSL"
 echo "You will be prompted to run as an admin"
