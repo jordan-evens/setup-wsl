@@ -1,0 +1,10 @@
+[Unit]
+Description=Mount VHDX files for directories
+
+[Service]
+ExecStart=/usr/local/sbin/vhdx_mount.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=local-fs.target
