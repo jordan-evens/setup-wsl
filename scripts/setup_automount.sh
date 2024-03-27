@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Setting up automount from alpine distros"
+
 sudo mkdir -p /mnt/data
 # need this if docker isn't installed yet
 sudo mkdir -p /var/lib/docker

@@ -6,4 +6,3 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 # complaining about kernel being out of date
 msiexec /passive /i wsl_update_x64.msi
-pause
