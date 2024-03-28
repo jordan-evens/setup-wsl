@@ -11,6 +11,7 @@ $DIR_VHDX = "$DIR\vhdx"
 $FILE_VHDX = "$DIR_VHDX\ext4.vhdx"
 
 Push-Location $DIR
+
 function Ensure-Download {
     param ($Url, $FileName)
     $Path = "$DIR_DOWNLOAD\$FileName"
@@ -72,7 +73,7 @@ Setup-Automount alpine_docker
 # might need to restart host after first attempt for wsl --install to work
 # will prompt for default user but we don't need to know what gets entered
 echo "Installing $WSL_DISTRO will prompt for a default user name and end at a prompt"
-echo "When you get to the prompt, just type `exit` to leave it and continue the installation"
+echo "When you get to the prompt, just type ""exit"" to leave it and continue the installation"
 wsl --install -d $WSL_DISTRO --web-download
 wsl --set-default $WSL_DISTRO
 Push-Location $DIR_SCRIPTS
@@ -80,4 +81,19 @@ echo "Enter password for user you just created for $WSL_DISTRO when prompted"
 wsl ./setup_automount.sh
 Pop-Location
 wsl --shutdown
+
+# was having a lot of issues with SSL certificates in docker and WSL
+echo "Copying windows certificates into WSL distro"
+
+echo "Exporting certificates"
+$DIR_CERTS = "$DIR\certs"
+New-Item -Force "$DIR_CERTS" -ItemType Directory
+&"$DIR_SCRIPTS\export_certs.ps1"
+
+echo "Importing certificates into WSL"
+Push-Location "$DIR_CERTS"
+wsl "../scripts/import_certs.sh"
+Pop-Location
+
+# exit $DIR
 Pop-Location
