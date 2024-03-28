@@ -70,6 +70,17 @@ echo "Installing WSL distribution $WSL_DISTRO"
 Setup-Automount alpine_data
 Setup-Automount alpine_docker
 
+${searcher} = [adsisearcher]"(samaccountname=${env:USERNAME})"
+${username} = ${env:USERNAME}
+${email} = ${searcher}.FindOne().Properties.mail
+${surname} = ${searcher}.FindOne().Properties.sn
+${givenname} = ${searcher}.FindOne().Properties.givenname
+${name} = "$givenname $surname"
+echo "User detected as:
+$name
+$email
+"
+
 # might need to restart host after first attempt for wsl --install to work
 # will prompt for default user but we don't need to know what gets entered
 echo "Installing $WSL_DISTRO will prompt for a default user name and end at a prompt"
@@ -106,6 +117,13 @@ Pop-Location
 
 echo "Turning metadata on in WSL so file permissions work"
 wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
+
+echo "Setting up user account in WSL for github"
+wsl git config --global user.name "$name"
+wsl git config --global user.email "$email"
+wsl git config --global init.defaultBranch main
+
+wsl ./scripts/setup_user.sh
 
 echo "Turning password for sudo back on"
 wsl --user root sed -i '/^%sudo[\t ]*ALL.*/d;/^# \(%sudo[\t ]*ALL.*\)/{s/^# //g}' /etc/sudoers
