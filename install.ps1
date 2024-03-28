@@ -95,5 +95,10 @@ Push-Location "$DIR_CERTS"
 wsl "../scripts/import_certs.sh"
 Pop-Location
 
+Push-Location "$DIR_SCRIPTS"
+echo "Setting up docker in WSL"
+wsl ./setup_docker.sh
+Pop-Location
+
 # exit $DIR
 Pop-Location
