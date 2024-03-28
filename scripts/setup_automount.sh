@@ -15,6 +15,14 @@ sudo systemctl daemon-reload
 sudo systemctl enable vhdx_mount
 sudo systemctl start vhdx_mount
 
+echo "Fixing permissions on automounted folders"
+sudo chown -R $USER:$USER /mnt/data
+
+# know we're going to use docker later but don't want this in that script
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo chown -R ${USER}:docker /var/lib/docker
+
 if [ ! -f /mnt/data/this_is_alpine_data ]; then
     echo "************ ERROR ************"
     echo "* Setting up /mnt/data failed *"
