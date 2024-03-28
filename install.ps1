@@ -76,8 +76,11 @@ echo "Installing $WSL_DISTRO will prompt for a default user name and end at a pr
 echo "When you get to the prompt, just type ""exit"" to leave it and continue the installation"
 wsl --install -d $WSL_DISTRO --web-download
 wsl --set-default $WSL_DISTRO
+
+echo "Turning password for sudo off for now"
+wsl --user root sed -i 's/\(%sudo[\t ]*ALL.*\)/# \1\n%sudo ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+
 Push-Location $DIR_SCRIPTS
-echo "Enter password for user you just created for $WSL_DISTRO when prompted"
 wsl ./setup_automount.sh
 Pop-Location
 wsl --shutdown
@@ -98,7 +101,14 @@ Pop-Location
 Push-Location "$DIR_SCRIPTS"
 echo "Setting up docker in WSL"
 wsl ./setup_docker.sh
+wsl docker run --rm hello-world
 Pop-Location
+
+echo "Turning metadata on in WSL so file permissions work"
+wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
+
+echo "Turning password for sudo back on"
+wsl --user root sed -i '/^%sudo[\t ]*ALL.*/d;/^# \(%sudo[\t ]*ALL.*\)/{s/^# //g}' /etc/sudoers
 
 # exit $DIR
 Pop-Location
