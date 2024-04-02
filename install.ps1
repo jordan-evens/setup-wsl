@@ -136,7 +136,7 @@ wsl ./setup_docker.sh
 wsl docker run --rm hello-world
 Pop-Location
 
-echo "Setting up user account in WSL for github"
+echo "Setting up user account in WSL for github with '""${name}"" <${email}>'"
 wsl git config --global user.name "$name"
 wsl git config --global user.email "$email"
 wsl git config --global init.defaultBranch main
