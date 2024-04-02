@@ -145,6 +145,12 @@ Ensure-Name github.com
 
 wsl ./scripts/setup_user.sh
 
+echo "Turning off /etc/resolv.conf generation in WSL so /etc/hosts stays"
+wsl --user root bash -c "printf '[network]\ngenerateResolvConf=false\n' >> /etc/wsl.conf"
+echo "Adding nameservers to /etc/resolv.conf"
+(powershell.exe -Command '(Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses | ForEach-Object { echo "$_" }') | wsl --user root /bin/bash -c "tr -d '\\r' | sed 's/\(.*\)/nameserver \1/g' | tee -a /etc/resolv.conf"
+
+
 echo "Turning password for sudo back on"
 wsl --user root sed -i '/^%sudo[\t ]*ALL.*/d;/^# \(%sudo[\t ]*ALL.*\)/{s/^# //g}' /etc/sudoers
 
