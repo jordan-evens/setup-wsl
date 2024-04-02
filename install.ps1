@@ -109,14 +109,16 @@ Push-Location "$DIR_CERTS"
 wsl "../scripts/import_certs.sh"
 Pop-Location
 
+echo "Turning metadata on in WSL so file permissions work"
+wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
+
+wsl --shutdown
+
 Push-Location "$DIR_SCRIPTS"
 echo "Setting up docker in WSL"
 wsl ./setup_docker.sh
 wsl docker run --rm hello-world
 Pop-Location
-
-echo "Turning metadata on in WSL so file permissions work"
-wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
 
 echo "Setting up user account in WSL for github"
 wsl git config --global user.name "$name"
