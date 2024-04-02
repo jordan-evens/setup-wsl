@@ -12,6 +12,16 @@ $FILE_VHDX = "$DIR_VHDX\ext4.vhdx"
 
 Push-Location $DIR
 
+
+function Ensure-Name {
+    param (${Name})
+    wsl sudo sed -i "/${Name}/d" /etc/hosts
+    ((Resolve-DnsName ${Name} -Type A) | ForEach-Object {
+        $ip=$_.IpAddress
+        echo "${ip} ${Name}"
+    })  | wsl sudo tee -a /etc/hosts
+}
+
 function Ensure-Download {
     param ($Url, $FileName)
     $Path = "$DIR_DOWNLOAD\$FileName"
@@ -113,6 +123,12 @@ echo "Turning metadata on in WSL so file permissions work"
 wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
 
 wsl --shutdown
+
+# even after everything, apt-get isn't seeing some servers when updating
+echo "Resolving hostnames so WSL can see them for sure"
+Ensure-Name security.ubuntu.com
+Ensure-Name archive.ubuntu.com
+Ensure-Name download.docker.com
 
 Push-Location "$DIR_SCRIPTS"
 echo "Setting up docker in WSL"
