@@ -1,5 +1,6 @@
 [Unit]
 Description=Mount VHDX files for directories
+Before=network-pre.target
 
 [Service]
 ExecStart=/usr/local/sbin/vhdx_mount.sh
