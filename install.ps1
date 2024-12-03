@@ -78,7 +78,6 @@ echo "Installing WSL distribution $WSL_DISTRO"
 # this might seem silly, but if we do it this way then we can have the data vhdx mount automatically for the Ubuntu distro
 # while still separating the OS from the data
 Setup-Automount alpine_data
-Setup-Automount alpine_docker
 
 ${searcher} = [adsisearcher]"(samaccountname=${env:USERNAME})"
 ${username} = ${env:USERNAME}
