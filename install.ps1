@@ -122,7 +122,7 @@ wsl "../scripts/import_certs.sh"
 Pop-Location
 
 echo "Turning metadata on in WSL so file permissions work"
-wsl --user root bash -c "printf '[automount]\nmetadata=true\n' >> /etc/wsl.conf"
+wsl --user root bash -c "printf '[automount]\noptions="metadata=true"\n' >> /etc/wsl.conf"
 
 wsl --shutdown
 
@@ -148,7 +148,7 @@ Ensure-Name github.com
 wsl ./scripts/setup_user.sh
 
 echo "Turning off /etc/resolv.conf generation in WSL so /etc/hosts stays"
-wsl --user root bash -c "printf '[network]\ngenerateResolvConf=false\n' >> /etc/wsl.conf"
+wsl --user root bash -c "printf '[network]\ngenerateHosts=false\n' >> /etc/wsl.conf"
 echo "Adding nameservers to /etc/resolv.conf"
 (powershell.exe -Command '(Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses | ForEach-Object { echo "$_" }') | wsl --user root /bin/bash -c "tr -d '\\r' | sed 's/\(.*\)/nameserver \1/g' | tee -a /etc/resolv.conf"
 
