@@ -71,9 +71,18 @@ Start-Process -Wait -Verb runas powershell "$DIR_SCRIPTS\00_install_admin.ps1"
 echo "Setting WSL to use version 2"
 wsl --set-default-version 2
 echo "Updating WSL"
-wsl --update --web-download
+Start-Process -Wait -Verb runas powershell "wsl --update --web-download"
 wsl --shutdown
+
 echo "Installing WSL distribution $WSL_DISTRO"
+
+# might need to restart host after first attempt for wsl --install to work
+# will prompt for default user but we don't need to know what gets entered
+echo "Installing $WSL_DISTRO will prompt for a default user name and end at a prompt"
+echo "When you get to the prompt, just type ""exit"" to leave it and continue the installation"
+wsl --install -d $WSL_DISTRO --web-download
+wsl --set-default $WSL_DISTRO
+wsl --shutdown
 
 # this might seem silly, but if we do it this way then we can have the data vhdx mount automatically for the Ubuntu distro
 # while still separating the OS from the data
@@ -90,12 +99,6 @@ $name
 $email
 "
 
-# might need to restart host after first attempt for wsl --install to work
-# will prompt for default user but we don't need to know what gets entered
-echo "Installing $WSL_DISTRO will prompt for a default user name and end at a prompt"
-echo "When you get to the prompt, just type ""exit"" to leave it and continue the installation"
-wsl --install -d $WSL_DISTRO --web-download
-wsl --set-default $WSL_DISTRO
 
 echo "Turning password for sudo off for now"
 wsl --user root sed -i 's/\(%sudo[\t ]*ALL.*\)/# \1\n%sudo ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
